@@ -39,3 +39,11 @@ CREATE TABLE tarefas (
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(20) CHECK (status IN ('a fazer', 'fazendo', 'pronto')) DEFAULT 'a fazer'
 );
+
+### 3.Telas: 
+
+## Cadastro de Usuario
+![Cadastro de Usuario](img/CadastroUsuario.png)
+
+## Cadastro de Tarefas
+![Cadastro de Usuario](img/CadastroTarefa.png)
