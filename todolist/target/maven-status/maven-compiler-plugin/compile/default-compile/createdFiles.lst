@@ -1,0 +1,11 @@
+com\example\Database.class
+com\example\view\TelaCadastroUsuario$1.class
+com\example\controller\TarefaController.class
+com\example\Main$1.class
+com\example\view\TelaCadastroTarefa$1.class
+com\example\Main.class
+com\example\controller\UsuarioController.class
+com\example\model\Tarefa.class
+com\example\model\Usuario.class
+com\example\view\TelaCadastroTarefa.class
+com\example\view\TelaCadastroUsuario.class
