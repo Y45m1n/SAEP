@@ -32,4 +32,9 @@ public class UsuarioController {
         }
         return usuarios;
     }
+
+    public static Usuario getUsuarioPorId(int usuarioId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUsuarioPorId'");
+    }
 }

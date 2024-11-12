@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.Database;
@@ -23,14 +24,80 @@ public class TarefaController {
         }
     }
 
-    public static List<Tarefa> listarTarefasPorStatus(String status) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listarTarefasPorStatus'");
+   public static List<Tarefa> listarTarefasPorStatus(String status) throws SQLException {
+    List<Tarefa> tarefas = new ArrayList<>();
+    String sql = "SELECT * FROM tarefas WHERE status = ?"; // Filtra as tarefas pelo status
+
+    try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/gerencia_tarefas", "usuario", "senha");
+         PreparedStatement stmt = con.prepareStatement(sql)) {
+        
+        stmt.setString(1, status);  // Define o parâmetro da consulta (status)
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Tarefa tarefa = new Tarefa(
+                    rs.getInt("id"),
+                    rs.getInt("usuario_id"),
+                    rs.getString("descricao"),
+                    rs.getString("nome_setor"),
+                    rs.getString("prioridade"),
+                    rs.getString("status")
+                );
+                tarefas.add(tarefa); // Adiciona a tarefa à lista
+            }
+        }
     }
 
-    public static Usuario buscarUsuarioPorId(int usuarioId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'buscarUsuarioPorId'");
+    return tarefas;
+}
+
+public static Usuario buscarUsuarioPorId(int usuarioId) throws SQLException {
+    Usuario usuario = null;
+    String sql = "SELECT * FROM usuarios WHERE id = ?"; // Consulta para encontrar o usuário
+
+    try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/gerencia_tarefas", "usuario", "senha");
+         PreparedStatement stmt = con.prepareStatement(sql)) {
+        
+        stmt.setInt(1, usuarioId);  // Define o parâmetro para a consulta (usuario_id)
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                usuario = new Usuario(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getString("email")
+                );
+            }
+        }
     }
+
+    return usuario;
+}
+
+
+public static List<Tarefa> listarTarefas() throws SQLException {
+    List<Tarefa> tarefas = new ArrayList<>();
+    String sql = "SELECT * FROM tarefas"; // Consulta para listar todas as tarefas
+
+    try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/gerencia_tarefas", "usuario", "senha");
+         PreparedStatement stmt = con.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        while (rs.next()) {
+            Tarefa tarefa = new Tarefa(
+                rs.getInt("id"),
+                rs.getInt("usuario_id"),
+                rs.getString("descricao"),
+                rs.getString("nome_setor"),
+                rs.getString("prioridade"),
+                rs.getString("status")
+            );
+            tarefas.add(tarefa); // Adiciona a tarefa à lista
+        }
+    }
+
+    return tarefas;
+}
+
 }
 

@@ -17,6 +17,7 @@ public class TelaCadastroTarefa extends JFrame {
     private JTextField nomeSetorField;
     private JComboBox<String> prioridadeComboBox;
     private JComboBox<Usuario> usuarioComboBox;
+    private JComboBox<String> statusComboBox;  // Novo JComboBox para status
 
     public TelaCadastroTarefa() {
         // Configuração da janela
@@ -83,6 +84,16 @@ public class TelaCadastroTarefa extends JFrame {
         usuarioComboBox.setBackground(fieldColor);
         usuarioComboBox.setPreferredSize(new Dimension(350, 40)); // Aumentado
 
+        // Novo JLabel e JComboBox para Status
+        JLabel statusLabel = new JLabel("Status:");
+        statusLabel.setFont(labelFont);
+        statusLabel.setForeground(labelColor);
+
+        statusComboBox = new JComboBox<>(new String[]{"a fazer", "fazendo", "pronto"});
+        statusComboBox.setFont(inputFont);
+        statusComboBox.setBackground(fieldColor);
+        statusComboBox.setPreferredSize(new Dimension(350, 40));
+
         // Botão Salvar
         JButton salvarButton = new JButton("Salvar");
         salvarButton.setFont(buttonFont);
@@ -125,6 +136,13 @@ public class TelaCadastroTarefa extends JFrame {
 
         gbc.gridx = 0; 
         gbc.gridy = 4;
+        add(statusLabel, gbc);  // Adiciona o campo de status
+
+        gbc.gridx = 1;
+        add(statusComboBox, gbc);  // Adiciona o JComboBox de status
+
+        gbc.gridx = 0; 
+        gbc.gridy = 5;
         gbc.gridwidth = 2;  // O botão ocupa duas colunas
         add(salvarButton, gbc);
 
@@ -136,20 +154,25 @@ public class TelaCadastroTarefa extends JFrame {
                 String nomeSetor = nomeSetorField.getText();
                 String prioridade = (String) prioridadeComboBox.getSelectedItem();
                 Usuario usuarioSelecionado = (Usuario) usuarioComboBox.getSelectedItem();
+                String status = (String) statusComboBox.getSelectedItem(); // Pega o status selecionado
 
-                if (descricao.isEmpty() || nomeSetor.isEmpty()) {
+                // Validação dos campos
+                if (descricao.isEmpty() || nomeSetor.isEmpty() || usuarioSelecionado == null || prioridade == null || status == null) {
                     JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.");
                     return;
                 }
 
-                Tarefa tarefa = new Tarefa(0, usuarioSelecionado.getId(), descricao, nomeSetor, prioridade, "pendente");
+                // Criação da tarefa com o status selecionado
+                Tarefa tarefa = new Tarefa(0, usuarioSelecionado.getId(), descricao, nomeSetor, prioridade, status);
                 try {
                     TarefaController.salvarTarefa(tarefa);
-                    JOptionPane.showMessageDialog(null, "Tarefa cadastrada com sucesso!");
-                    descricaoField.setText("");  // Limpar os campos após o cadastro
+                    JOptionPane.showMessageDialog(null, "Cadastro concluído com sucesso!");
+                    // Limpar os campos após o cadastro
+                    descricaoField.setText("");  
                     nomeSetorField.setText("");
                     prioridadeComboBox.setSelectedIndex(0);
                     usuarioComboBox.setSelectedIndex(0);
+                    statusComboBox.setSelectedIndex(0); // Resetando o status
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Erro ao cadastrar a tarefa.");
@@ -158,8 +181,7 @@ public class TelaCadastroTarefa extends JFrame {
         });
 
         // Configurações da janela
-        setSize(500, 350); // Ajuste do tamanho da janela para acomodar os campos aumentados
+        setSize(500, 500); // Ajuste do tamanho da janela para acomodar os campos aumentados
+        setVisible(true);  // Garantir que a janela seja visível
     }
-
-    
 }
